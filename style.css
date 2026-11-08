@@ -1,0 +1,35 @@
+:root { --fg:#1f2430; --muted:#5b6475; --bg:#fff; --line:#e3e6ec; --accent:#2a5db0; }
+@media (prefers-color-scheme: dark) { :root { --fg:#e8eaf0; --muted:#a0a8b8; --bg:#14171d; --line:#2c3240; --accent:#7aa7f0; } }
+* { box-sizing: border-box; }
+body { margin:0; font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--fg); background:var(--bg); }
+header, main { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+header { padding-top: 32px; }
+h1 { font-size: 1.9rem; margin: 0 0 4px; }
+h2 { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); }
+h3 { margin: 0 0 4px; font-size: 1.15rem; }
+h4 { margin: 20px 0 4px; }
+.sub, .dek, figcaption { color: var(--muted); }
+.dek { margin: 0 0 12px; font-size: .95rem; }
+figcaption { font-size: .85rem; margin-top: 8px; }
+figure { margin: 32px 0; }
+nav a { margin-right: 16px; color: var(--accent); }
+.todo { background: rgba(255,200,0,.15); border-left: 3px solid #e0a800; padding: 8px 12px; }
+svg { max-width: 100%; height: auto; display: block; }
+svg text { fill: var(--fg); font-family: inherit; }
+.axis path, .axis line { stroke: var(--line); }
+.axis text, .muted { fill: var(--muted); font-size: 12px; }
+.grid line { stroke: var(--line); }
+.grid path { display: none; }
+#legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-bottom: 6px; font-size: .85rem; }
+#legend button { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 2px 4px; border-radius: 4px; }
+#legend button:focus-visible { outline: 2px solid var(--accent); }
+#legend button.off { opacity: .35; }
+#legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+#tip { position: fixed; pointer-events: none; opacity: 0; background: var(--bg); color: var(--fg); border: 1px solid var(--line); box-shadow: 0 2px 8px rgba(0,0,0,.2); padding: 6px 9px; font-size: .85rem; border-radius: 4px; max-width: 260px; z-index: 5; }
+.writeup p { max-width: 70ch; }
+footer { height: 48px; }
+.controls { display: flex; align-items: center; gap: 12px; margin: 8px 0; flex-wrap: wrap; }
+.controls input[type=range] { flex: 1; min-width: 160px; accent-color: var(--accent); }
+.controls button { font: inherit; padding: 4px 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--fg); cursor: pointer; }
+.muted-p { color: var(--muted); }
+.notes ul { padding-left: 20px; max-width: 75ch; }
