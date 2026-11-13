@@ -9,35 +9,50 @@
 <body>
 <header>
   <h1>White Hat / Black Hat: Gender Equality Indicators</h1>
-  <p class="sub">CMSC471 Assignment 2 &middot; Two visualizations of the same World Bank dataset</p>
+  <p class="sub">CMSC471 Assignment 2: Two visualizations of the same World Bank Gender Equality dataset</p>
   <nav><a href="#white">White hat</a><a href="#black">Black hat</a><a href="#refs">References</a></nav>
 </header>
 
 <main>
 <section id="white">
-  <h2>White hat: laws and the workforce</h2>
+  <h2>White Hat: Women's Labor Participation Rates over Time, By Region/Country, By Women, Business and Law Indexes</h2>
   <p id="loading" class="muted-p">Loading World Bank data (19 MB)&hellip;</p>
 
-  <figure>
-    <h3>Since 1990 the gap between men's and women's labor force participation is smaller in every region, but women still trail men everywhere</h3>
-    <p class="dek">Median gap between male and female labor force participation (percentage points), by World Bank region, 1990&ndash;2019. A gap of 0 would mean women and men participate at equal rates. The change was uneven: for example, South Asia's gap widened from 45.6 points in 1998 to 47.7 in 2010 before falling to 44.1 in 2019.</p>
-    <div id="chart-gap"></div>
-    <figcaption>Each line is the <b>median</b> of the countries in that region. n = number of countries with labor force estimates for both women and men; it is the same in every year from 1990 to 2019. Countries are weighted equally regardless of population. Hover a line for exact values; select a region in the legend above the scatterplot to see the spread (the middle 50% of its countries) as a shaded band. <span id="band-rule"></span> The vertical marker follows the year chosen on the slider. <b id="band-note"></b></figcaption>
-  </figure>
+  <p class="intro">Use the charts below to explore gender equality in labor force participation rates! <b>A</b> shows how the gap between men's and women's labor force participation changed over time in each region; <b>B</b> zooms in on one year to compare each country's legal equality with women's participation. The filters for year and region below control both charts at once.</p>
 
-  <figure>
-    <h3>Countries with more equal business laws tend to have more women in the workforce</h3>
-    <p class="dek">Each dot is one country. Horizontal: Women, Business and the Law (WBL) index, 0&ndash;100, where 100 means women and men have equal legal rights in the areas measured. Vertical: share of women aged 15+ who are in the labor force.</p>
-    <div class="controls">
-      <label for="year">Year: <output id="year-out">2019</output></label>
-      <input id="year" type="range" min="1990" max="2019" step="1" value="2019">
-      <button id="play" type="button">&#9654; Play</button>
+  <div class="linked">
+    <div class="pair">
+      <figure>
+        <h3>A &middot; Difference in Men and Women's Labor Force Participation Rates by Region, 1990&ndash;2019</h3>
+        <p class="dek">Since 1990 the gap between men's and women's labor force participation is smaller in every region, but women still trail men everywhere.</p>
+        <div id="chart-gap"></div>
+        <figcaption>Each line shows the <b>median</b> of the countries in that region.
+        <span id="band-rule"></span> <b id="band-note"></b></figcaption>
+      </figure>
+
+      <figure>
+        <h3>B &middot; Legal Equality Score vs Women's Labor Force Participation by Country</h3>
+        <p class="dek">Shown for selected year. Overall, countries with more equal business laws tend to have more women in the workforce.</p>
+        <div id="chart-scatter"></div>
+        <figcaption id="scatter-note"></figcaption>
+      </figure>
+
+      <!-- Placed by CSS between the chart titles (rows 1-2) and the charts (row 4) -->
+      <div class="shared-controls" role="group" aria-label="Filters for charts A and B">
+        <div class="controls">
+          <span class="ctl-label">Year</span>
+          <label for="year" class="sr-only">Year</label>
+          <output id="year-out">2019</output>
+          <input id="year" type="range" min="1990" max="2019" step="1" value="2019">
+          <button id="play" type="button">&#9654; Play</button>
+        </div>
+        <div class="controls">
+          <span class="ctl-label">Region</span>
+          <div id="legend"></div>
+        </div>
+      </div>
     </div>
-    <div id="legend"></div>
-    <div id="chart-scatter"></div>
-    <figcaption id="scatter-note"></figcaption>
-    <figcaption><b>Caution about earlier years:</b> the World Bank built the historical WBL scores (1970 onward) retrospectively, by looking back through legal records to identify each change in the law. Scores for earlier years are reconstructions, not measurements made at the time, and may be revised as new reforms are found.</figcaption>
-  </figure>
+  </div>
 
   <article class="notes">
     <h3>About the data</h3>
@@ -45,9 +60,9 @@
       <li><b>Source:</b> World Bank Gender Statistics (World Development Indicators extract, updated 2021-09-15). Labor force participation figures are ILO <i>modeled</i> estimates; the WBL index comes from the World Bank's Women, Business and the Law project.</li>
       <li><b>Filtering:</b> World Bank aggregates such as "World" and "Arab World" were removed so that only countries are counted. Labor force data ends in 2019, so the charts stop there.</li>
       <li><b>Coverage:</b> the country metadata lists 217 countries, but only 187 have labor force estimates for women and men, so the line chart covers 187. The scatterplot shows only countries that have both a labor force estimate and a legal score (178 in 2019); countries with only one of the two are excluded. Not all 217 countries are represented in either chart.</li>
-      <li><b>Historical legal scores:</b> the World Bank's WBL series starts in 1970 and its historical scores were reconstructed retrospectively from past laws, not measured at the time (see the caution under the scatterplot).</li>
+      <li><b>Historical legal scores:</b> the World Bank's WBL series starts in 1970 and its historical scores were reconstructed retrospectively from past laws, not measured at the time (see the caution below the charts).</li>
       <li><b>Computation:</b> gap = male rate &minus; female rate for each country-year; regional values are medians, shaded bands are the 25th&ndash;75th percentile. The dashed line is a least-squares fit across the dots shown.</li>
-      <li><b>Limitations and bias:</b> unpaid care work is not counted as labor force participation. The WBL index scores laws on paper, not enforcement. Medians treat small and large countries equally, and "North America" contains only two countries. A dot does not show causation: income, culture and economic structure also matter.</li>
+      <li><b>Limitations and bias:</b> unpaid care work is not counted as labor force participation. The WBL index scores laws on paper, not enforcement. Medians treat small and large countries equally, and "North America" contains only two countries.</li>
     </ul>
   </article>
 </section>

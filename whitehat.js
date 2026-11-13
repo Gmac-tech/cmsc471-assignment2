@@ -69,7 +69,7 @@ Promise.all([
 });
 
 function drawGap(gapByRegion) {
-  const W = 880, H = 420, m = { t: 12, r: 300, b: 40, l: 56 };
+  const W = 620, H = 460, m = { t: 24, r: 20, b: 48, l: 56 };
   const svg = d3.select('#chart-gap').append('svg').attr('viewBox', [0, 0, W, H]).attr('role', 'img')
     .attr('aria-label', 'Line chart of the median male minus female labor force participation gap by region, 1990 to 2019');
   const x = d3.scaleLinear([Y0, Y1], [m.l, W - m.r]);
@@ -91,20 +91,8 @@ function drawGap(gapByRegion) {
   const band = svg.append('path').attr('opacity', .18);
   const marker = svg.append('line').attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'currentColor')
     .attr('stroke-dasharray', '2 3').attr('opacity', .5);
-
-  // Direct labels with simple collision avoidance
-  const labels = regs.map(([name, v]) => ({ name, last: v[v.length - 1], y: y(v[v.length - 1].gap) }))
-    .sort((a, b) => a.y - b.y);
-  const labelGap = 16, labelTop = m.t + 8, labelBottom = H - m.b - 8;
-  for (let i = 0; i < labels.length; i++) {
-    labels[i].y = Math.max(i ? labels[i - 1].y + labelGap : labelTop, labels[i].y);
-  }
-  if (labels.length && labels[labels.length - 1].y > labelBottom) {
-    labels[labels.length - 1].y = labelBottom;
-    for (let i = labels.length - 2; i >= 0; i--) {
-      labels[i].y = Math.min(labels[i].y, labels[i + 1].y - labelGap);
-    }
-  }
+  const markerLabel = svg.append('text').attr('class', 'muted').attr('y', m.t - 8).attr('text-anchor', 'middle')
+    .style('font-weight', 600);
 
   const g = svg.selectAll('.reg').data(regs).join('g').attr('class', 'reg');
   const paths = g.append('path').attr('d', ([, v]) => line(v)).attr('fill', 'none')
@@ -116,23 +104,19 @@ function drawGap(gapByRegion) {
       const p = v.find(d => d.year === yr);
       showTip(ev, `<b>${k}</b><br>${yr}: median gap ${p.gap.toFixed(1)} points<br>middle 50% of countries: ${p.q1.toFixed(1)}&ndash;${p.q3.toFixed(1)}<br>${p.n} countries`);
     }).on('mouseleave', () => { state.hover = null; hideTip(); update(); });
-  const labs = svg.selectAll('.lab').data(labels).join('text').attr('class', 'lab')
-    .attr('x', x(Y1) + 8).attr('y', d => d.y + 4).attr('font-size', 12.5)
-    .style('fill', d => COLORS[d.name]).style('font-weight', 600)
-    .text(d => `${d.name} (${d.last.gap.toFixed(0)} pts, n=${d.last.n})`);
 
   // The spread band is only drawn for regions with enough countries for meaningful quartiles.
   const MIN_N_BAND = 10;
   const tooSmall = k => d3.min(gapByRegion.get(k), d => d.n) < MIN_N_BAND;
   const smallRegions = REGIONS.filter(tooSmall);
-  d3.select('#band-rule').text(`The band is not drawn for regions with fewer than ${MIN_N_BAND} countries (${smallRegions.map(k => `${k}, n=${d3.min(gapByRegion.get(k), d => d.n)}`).join('; ')}), because quartiles of so few countries are not meaningful; their median lines are still shown.`);
+  d3.select('#band-rule').text(`IQR band is not drawn for regions with fewer than ${MIN_N_BAND} countries (${smallRegions.map(k => `${k}, n=${d3.min(gapByRegion.get(k), d => d.n)}`).join('; ')}).`);
 
   state.listeners.push(() => {
     const f = focus();
     const op = k => (!f || f === k ? 1 : .15);
     paths.attr('opacity', ([k]) => op(k));
-    labs.attr('opacity', d => op(d.name));
     marker.attr('x1', x(state.year)).attr('x2', x(state.year));
+    markerLabel.attr('x', x(state.year)).text(state.year);
     const sel = state.selected;
     const drawBand = sel && !tooSmall(sel);
     band.attr('display', drawBand ? null : 'none');
@@ -143,7 +127,7 @@ function drawGap(gapByRegion) {
 }
 
 function drawScatter(meta, byInd) {
-  const W = 880, H = 520, m = { t: 32, r: 16, b: 48, l: 56 };
+  const W = 620, H = 460, m = { t: 24, r: 16, b: 48, l: 56 };
   const svg = d3.select('#chart-scatter').append('svg').attr('viewBox', [0, 0, W, H]).attr('role', 'img')
     .attr('aria-label', 'Scatterplot of Women Business and the Law score against female labor force participation');
   const x = d3.scaleLinear([15, 100], [m.l, W - m.r]);
@@ -154,7 +138,7 @@ function drawScatter(meta, byInd) {
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(8));
   svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5).tickFormat(d => d + '%'));
   svg.append('text').attr('class', 'muted').attr('x', (m.l + W - m.r) / 2).attr('y', H - 10).attr('text-anchor', 'middle')
-    .text('Legal equality score, Women, Business and the Law index (100 = equal rights in the law)');
+    .text('Legal equality score, WBL index (100 = equal rights in the law)');
   svg.append('text').attr('class', 'muted').attr('transform', 'rotate(-90)').attr('x', -(H - m.b + m.t) / 2).attr('y', 14)
     .attr('text-anchor', 'middle').text('Women aged 15+ in the labor force (%)');
 
@@ -196,7 +180,7 @@ function drawScatter(meta, byInd) {
     const slope = sxy / sxx, icpt = my - slope * mx, r = sxy / Math.sqrt(sxx * syy);
     const [x0, x1] = d3.extent(pts, d => d.wbl);
     trend.attr('x1', x(x0)).attr('x2', x(x1)).attr('y1', y(icpt + slope * x0)).attr('y2', y(icpt + slope * x1));
-    trendLabel.attr('x', W - m.r - 4).attr('y', 20).attr('text-anchor', 'end')
+    trendLabel.attr('x', W - m.r - 4).attr('y', m.t - 8).attr('text-anchor', 'end')
       .text(`Overall trend (r = ${r.toFixed(2)})`);
 
     legend.classed('off', d => f && f !== d)
@@ -207,7 +191,7 @@ function drawScatter(meta, byInd) {
     const lfp = codes.filter(c => has('F', c) && has('M', c));
     const lfpNoWbl = lfp.filter(c => !has('W', c)).length;
     const wblNoLfp = codes.filter(c => has('W', c) && !(has('F', c) && has('M', c))).length;
-    d3.select('#scatter-note').html(`<b>${state.year}:</b> ${pts.length} of the ${codes.length} countries in the World Bank country metadata are plotted: those with both a legal score and a labor force estimate. ${lfp.length} countries have labor force estimates; ${lfpNoWbl} of them have no legal score and are excluded. A further ${wblNoLfp} countries have a legal score but no labor force estimate and are also excluded. The regional counts in the legend are therefore smaller than the n shown on the line chart. The dashed line is a least-squares fit across the dots shown; r is the correlation. This is an association, not proof that laws cause higher participation. Click a region name to isolate it, or hover over a region name or a line in the first chart to preview it.`);
+    d3.select('#scatter-note').html(`<b>${state.year}</b>: The dashed line is a least-squares fit across the dots shown; r is the correlation.`);
     d3.select('#year-out').text(state.year);
   }
   state.listeners.push(render);
