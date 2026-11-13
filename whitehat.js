@@ -82,6 +82,8 @@ function drawGap(gapByRegion) {
   svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(6));
   svg.append('text').attr('class', 'muted').attr('transform', 'rotate(-90)').attr('x', -(H - m.b + m.t) / 2).attr('y', 14)
     .attr('text-anchor', 'middle').text('Male minus female participation rate (percentage points)');
+  svg.append('text').attr('class', 'muted').attr('x', (m.l + W - m.r) / 2).attr('y', H - 10).attr('text-anchor', 'middle')
+    .text('Year');
   svg.append('text').attr('class', 'muted').attr('x', m.l + 4).attr('y', y(0) - 6).text('0 = equal participation');
 
   const line = d3.line().x(d => x(d.year)).y(d => y(d.gap));
