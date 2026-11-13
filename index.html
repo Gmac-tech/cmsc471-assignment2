@@ -53,8 +53,40 @@
 </section>
 
 <section id="black">
-  <h2>Black hat</h2>
-  <p class="todo">TODO (black hat teammate): add the black hat visualization here.</p>
+  <h2>Black hat: women in politics</h2>
+  <figure>
+    <h3>Women’s political power is surging worldwide</h3>
+    <p class="dek">Since 2000, countries from Morocco to the Kyrgyz Republic have multiplied women’s share of seats in national parliaments. Morocco’s share grew more than thirtyfold, from 0.6% to 20.5%.</p>
+    <p class="bh-instructions">Growth in the share of national parliament seats held by women, 2000 to 2020, ranked from fastest to slowest. Scroll or drag to move through the ranking, hover or focus a country for details, and select a country to see its yearly trend. Each country keeps its color in the detail view.</p>
+    <div id="blackhat-chart" tabindex="0" aria-label="Scrollable country ranking">
+      <svg id="blackhat-svg" viewBox="0 0 880 460" role="img" aria-label="Ranked countries by growth in women's parliamentary representation since 2000"></svg>
+    </div>
+    <div class="bh-legend-label">Country colors (same colors in country views)</div>
+    <div id="blackhat-legend" class="bh-legend" role="list" aria-label="Country color legend"></div>
+    <div class="controls">
+      <button id="blackhat-reset" type="button">Back to top</button>
+      <button id="blackhat-back" type="button" hidden>Back to overview</button>
+    </div>
+    <div id="blackhat-detail-nav" class="bh-detail-nav" hidden>
+      <button id="blackhat-prev" type="button">Previous country</button>
+      <button id="blackhat-next" type="button">Next country</button>
+    </div>
+    <div id="blackhat-sparklines" class="bh-sparklines" aria-label="Next five ranked countries"></div>
+    <div class="bh-tooltip" role="tooltip"></div>
+  </figure>
+
+  <article class="notes">
+    <h3>How to read this chart</h3>
+    <p class="dek">Each dot shows how much a country’s share of parliamentary seats held by women has grown since 2000. Longer lines mean faster growth. The horizontal axis is scaled to fit the ranking, and the largest values are labeled directly. Use Previous and Next in the country view to move through the ranking.</p>
+    <h3>About the data</h3>
+    <ul>
+      <li><b>Source:</b> World Bank Gender Statistics (World Development Indicators extract, updated 2021-09-15). The indicator is the proportion of seats held by women in national parliaments (SG.GEN.PARL.ZS).</li>
+      <li><b>Filtering:</b> World Bank aggregates such as “World” and “Arab World” were removed so that only countries are ranked. Growth rates are not defined for countries with no women in parliament in 2000, so those countries are not ranked.</li>
+      <li><b>Coverage:</b> Countries need values for both 2000 and 2020 to be ranked. Not all 217 countries in the World Bank metadata have both.</li>
+      <li><b>Computation:</b> Growth = (2020 share ÷ 2000 share − 1) × 100. Each country’s trend chart is scaled to that country’s own range of values.</li>
+      <li><b>Limitations:</b> Seat shares count women’s presence in parliament, not their influence. Countries are weighted equally regardless of population.</li>
+    </ul>
+  </article>
 </section>
 
 <section id="refs">
@@ -62,7 +94,7 @@
   <ul>
     <li>World Bank. <i>Gender Statistics</i> (World Development Indicators extract). <a href="https://datatopics.worldbank.org/gender/">datatopics.worldbank.org/gender</a>. Files used: <code>gender-raw-2021.csv</code>, <code>Metadata_Country_API_17_DS2_en_csv_v2_3058240.csv</code>, <code>Metadata_Indicator_API_17_DS2_en_csv_v2_3058240.csv</code>.</li>
     <li>Charts built with <a href="https://d3js.org/">D3.js</a> v7.</li>
-    <li>Black hat references: TODO.</li>
+    <li>Black hat source: World Bank Gender Statistics, indicator SG.GEN.PARL.ZS, women's share of seats in national parliaments.</li>
   </ul>
 </section>
 </main>
@@ -70,5 +102,6 @@
 <div id="tip" role="tooltip"></div>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script src="whitehat.js"></script>
+<script src="blackhat.js"></script>
 </body>
 </html>

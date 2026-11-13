@@ -95,7 +95,16 @@ function drawGap(gapByRegion) {
   // Direct labels with simple collision avoidance
   const labels = regs.map(([name, v]) => ({ name, last: v[v.length - 1], y: y(v[v.length - 1].gap) }))
     .sort((a, b) => a.y - b.y);
-  for (let i = 1; i < labels.length; i++) labels[i].y = Math.max(labels[i].y, labels[i - 1].y + 15);
+  const labelGap = 16, labelTop = m.t + 8, labelBottom = H - m.b - 8;
+  for (let i = 0; i < labels.length; i++) {
+    labels[i].y = Math.max(i ? labels[i - 1].y + labelGap : labelTop, labels[i].y);
+  }
+  if (labels.length && labels[labels.length - 1].y > labelBottom) {
+    labels[labels.length - 1].y = labelBottom;
+    for (let i = labels.length - 2; i >= 0; i--) {
+      labels[i].y = Math.min(labels[i].y, labels[i + 1].y - labelGap);
+    }
+  }
 
   const g = svg.selectAll('.reg').data(regs).join('g').attr('class', 'reg');
   const paths = g.append('path').attr('d', ([, v]) => line(v)).attr('fill', 'none')
@@ -134,7 +143,7 @@ function drawGap(gapByRegion) {
 }
 
 function drawScatter(meta, byInd) {
-  const W = 880, H = 520, m = { t: 12, r: 16, b: 48, l: 56 };
+  const W = 880, H = 520, m = { t: 32, r: 16, b: 48, l: 56 };
   const svg = d3.select('#chart-scatter').append('svg').attr('viewBox', [0, 0, W, H]).attr('role', 'img')
     .attr('aria-label', 'Scatterplot of Women Business and the Law score against female labor force participation');
   const x = d3.scaleLinear([15, 100], [m.l, W - m.r]);
@@ -187,7 +196,8 @@ function drawScatter(meta, byInd) {
     const slope = sxy / sxx, icpt = my - slope * mx, r = sxy / Math.sqrt(sxx * syy);
     const [x0, x1] = d3.extent(pts, d => d.wbl);
     trend.attr('x1', x(x0)).attr('x2', x(x1)).attr('y1', y(icpt + slope * x0)).attr('y2', y(icpt + slope * x1));
-    trendLabel.attr('x', x(x0) + 4).attr('y', y(icpt + slope * x0) + 18).text(`Overall trend (r = ${r.toFixed(2)})`);
+    trendLabel.attr('x', W - m.r - 4).attr('y', 20).attr('text-anchor', 'end')
+      .text(`Overall trend (r = ${r.toFixed(2)})`);
 
     legend.classed('off', d => f && f !== d)
       .html(d => `<i style="background:${COLORS[d]}"></i>${d} (${pts.filter(p => p.region === d).length})`);
